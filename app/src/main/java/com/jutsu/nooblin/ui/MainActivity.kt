@@ -23,26 +23,26 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun sendNotification(message: String){
+    // send push notification
+    private fun sendNotification(message: String) {
+
         // Context objects are able to fetch or start system services.
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationId = 0
-        val name = getString(R.string.channel_name)
-        val descriptionText = getString(R.string.channel_description)
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel("channel-id", name, importance).apply {
+        val notificationChannel = "nooblin-channel"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(notificationChannel, name, importance).apply {
                 description = descriptionText
             }
-
-        } else {
-            TODO("VERSION.SDK_INT < O")
+            // Register the channel with the system
+            notificationManager.createNotificationChannel(channel)
         }
 
-        // Register the channel with the system
-        notificationManager.createNotificationChannel(channel)
-
-        val builder = NotificationCompat.Builder(this, "channel-id")
+        val builder = NotificationCompat.Builder(this, notificationChannel)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(message)
             .setSmallIcon(R.mipmap.ic_launcher)
